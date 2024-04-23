@@ -1,0 +1,20 @@
+{% extends 'clients/base.html' %}
+{% block content %}
+    <div class="col-4 ">
+        <a class="p-2 btn btn-outline-dark mb-5" href="{{ request.META.HTTP_REFERER }}">Назад</a>
+    </div>
+    <div class="col-4 ">
+        <div class="card mb-2 box-shadow">
+                            <img src="/media/{{ object.preview }}" alt=""/>
+
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ object.title }} ({{ object.slug }})</h4>
+            </div>
+            <div class="card-body">
+                <h6 class="card-title pricing-card-title">Содержание: {{ object.body }}</h6>
+                <h6 class="card-title pricing-card-title">Дата создания: {{ object.date_creation }}</h6>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
