@@ -1,0 +1,10 @@
+{% extends 'clients/base.html' %}
+{% load mytag %}
+{% block content %}
+     <div class="col-12 mb-2">
+        <a class="p-2 btn btn-outline-dark mb-5" href="{% url 'clients:newsletter_create' %}">Создать рассылку</a>
+    </div>
+    {% for object in object_list %}
+        {% include 'includes/inc_newsletter_card.html' %}
+    {% endfor %}
+{% endblock %}

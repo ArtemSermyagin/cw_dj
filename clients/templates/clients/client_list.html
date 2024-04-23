@@ -1,0 +1,12 @@
+{% extends 'clients/base.html' %}
+{% block content %}
+    <div class="col-12 mb-2">
+        <a class="p-2 btn btn-outline-dark mb-5" href="{% url 'clients:client_create' %}">Добавить клиента</a>
+    </div>
+    {% for i in object.client.count %}
+        <h6 class="card-title pricing-card-title">{{ i }}</h6>
+    {% endfor %}
+    {% for object in object_list %}
+        {% include 'includes/inc_client_card.html' %}
+    {% endfor %}
+{% endblock %}

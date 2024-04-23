@@ -1,0 +1,60 @@
+{% extends 'clients/base.html' %}
+{% load mytag %}
+{% block content %}
+    <div class="col-1 ">
+        <a class="p-2 btn btn-outline-dark mb-5" href="{{ request.META.HTTP_REFERER }}">Назад</a>
+    </div>
+    <div class="col-6 ">
+        <div class="card mb-2 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Данные рассылки</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title pricing-card-title">Данные клиента:</h5>
+                {% for g in object.client.all %}
+                    <h6 class="card-title pricing-card-title">ФИО: {{ g.full_name }}</h6>
+                    <h6 class="card-title pricing-card-title">email: {{ g.email }}</h6>
+                {% endfor %}
+                <h5 class="card-title pricing-card-title">Время рассылки:</h5>
+                <h6 class="card-title pricing-card-title">{{ object.time }}</h6>
+                <h5 class="card-title pricing-card-title">Периодичность рассылки:</h5>
+                <h6 class="card-title pricing-card-title">{{ object.period }}</h6>
+                <h5 class="card-title pricing-card-title">Статус рассылки:</h5>
+                <h6 class="card-title pricing-card-title">{{ object.status }}</h6>
+            </div>
+            <div class="card-body">
+                {% if task %}
+                    <form action="{% url 'clients:toggle_task' task.id %}" method="post">
+                        {% csrf_token %}
+                        {% if task.enabled %}
+                            <h5>Задача активна</h5>
+                            <button class="btn btn-danger" type="submit">Отключить</button>
+                        {% else %}
+                            <h5>Задача не активна</h5>
+                            <button class="btn btn-success" type="submit">Активировать</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-5 ">
+        <div class="card mb-2 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Message</h4>
+            </div>
+            <div class="card-body">
+                {% if object.messages.exists %}
+                    {% for mes in message_ %}
+                        <p class="text-dark">
+                            Тема письма: {{ mes.theme }},
+                            Содержание: {{ mes.letter }}
+                        </p>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-dark">Сообщение отсутствует</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

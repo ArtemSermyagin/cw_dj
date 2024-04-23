@@ -1,0 +1,24 @@
+{% extends 'clients/base.html' %}
+{% load mytag %}
+{% block content %}
+    {% for object in object_list %}
+        <div class="col-4 ">
+            <div class="card mb-2 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Просмотр отчётов по рассылкам</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title pricing-card-title">Данные рассылки:</h5>
+                    <h5 class="card-title pricing-card-title">Дата и время последней попытки:</h5>
+                    <h6 class="card-title pricing-card-title">{{ object.date_attempt }}</h6>
+                    <h5 class="card-title pricing-card-title">Статус попытки:</h5>
+                    <h6 class="card-title pricing-card-title">{{ object.state }}</h6>
+                    <h5 class="card-title pricing-card-title">Ответ почтового сервера:</h5>
+                    <h6 class="card-title pricing-card-title">{{ object.response_server }}</h6>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+{% endblock %}
+

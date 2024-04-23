@@ -1,0 +1,23 @@
+{% load mytag %}
+
+<div class="col-4 ">
+    <div class="card mb-2 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">{{ object.full_name }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a class="p-2 btn btn-outline-dark"
+                       href="{% url 'clients:client_detail' object.pk %}">Профиль</a>
+                    <a class="p-2 btn btn-outline-primary"
+                       href="{% url 'clients:client_update' object.pk %}">Редактировать</a>
+                    <a class="p-2 btn btn-outline-primary"
+                       href="{% url 'clients:client_block' object.pk %}">Блок</a>
+                    <a class="p-2 btn btn-outline-primary"
+                       href="{% url 'clients:client_delete' object.pk %}">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

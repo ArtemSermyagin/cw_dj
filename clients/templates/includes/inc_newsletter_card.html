@@ -1,0 +1,21 @@
+{% load mytag %}
+
+<div class="col-4 ">
+    <div class="card mb-2 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Рассылки</h4>
+        </div>
+        <div class="card-body">
+            <h1>{{ object.user.username }}</h1>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a class="p-2 btn btn-outline-dark"
+                       href="{% url 'clients:newsletter_detail' object.pk %}">Посмотреть</a>
+
+                    <a class="p-2 btn btn-outline-danger"
+                       href="{% url 'clients:newsletter_delete' object.pk %}">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

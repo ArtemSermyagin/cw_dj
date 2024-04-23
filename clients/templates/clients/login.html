@@ -1,0 +1,41 @@
+{% extends 'clients/base.html' %}
+{% block content %}
+
+    <div class="col-12">
+        <form action="{% url 'clients:login' %}" class="row" method="post" enctype="multipart/form-data">
+            <div class="col-6">
+                <div class="card-body mb-5">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Вход
+                        </h3>
+                        {% csrf_token %}
+                        <div>
+                            {{ form.username.label_tag }}
+                            {{ form.username }}
+                        </div>
+                        <div>
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                        </div>
+                        <button type="submit" class="btn btn-success">Войти</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <h6 class="card-title ">
+            Если вы забыли пароль мы можем автоматически его сгенерировать
+        </h6>
+        <form action="{% url 'clients:genpassword' %}" method="post">
+            {% csrf_token %}
+            <label for="user_email">
+                Введите вашу почту
+                <input type="text" name="user_email" id="user_email">
+            </label>
+            <button type="submit">Восставновить</button>
+        </form>
+    </div>
+{% endblock %}
+

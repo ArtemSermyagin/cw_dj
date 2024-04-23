@@ -1,0 +1,29 @@
+{% extends 'clients/base.html' %}
+{% block content %}
+    <div class="col-1 ">
+        <a class="p-2 btn btn-outline-dark mb-5" href="{{ request.META.HTTP_REFERER }}">Назад</a>
+    </div>
+    <div class="col-12">
+        <form class="row" method="post" enctype="multipart/form-data">
+            <div class="col-6">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Добавить клиента
+                        </h3>
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">
+                            {% if object %}
+                                Сохранить
+                            {% else %}
+                                Добавить
+                                </button>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+

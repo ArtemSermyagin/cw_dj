@@ -1,0 +1,45 @@
+{% extends 'clients/base.html' %}
+{% load mytag %}
+{% block content %}
+    <div class="col-4 ">
+        <a class="p-2 btn btn-outline-dark mb-5" href="{{ request.META.HTTP_REFERER }}">Назад</a>
+    </div>
+    <div class="col-4 ">
+        <div class="card mb-5 box-shadow">
+            <img src="{{ object.avatar | my_media }}" alt=""/>
+
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ object.full_name }}</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title pricing-card-title">Данные клиента:</h5>
+                <h5 class="card-title pricing-card-title">Email:</h5>
+                <h6 class="card-title pricing-card-title">{{ object.email }}</h6>
+                <h5 class="card-title pricing-card-title">Комментарий:</h5>
+                <h6 class="card-title pricing-card-title">{{ object.comment }}</h6>
+            </div>
+        </div>
+    </div>
+    {#    <div class="col-5 ">#}
+    {#        <div class="card mb-2 box-shadow">#}
+    {#            <div class="card-header">#}
+    {#                <h4 class="my-0 font-weight-normal">Версии товара</h4>#}
+    {#            </div>#}
+    {#            <div class="card-body">#}
+    {#                {% if object.product_ver.exists %}#}
+    {#                    {% for version in object.product_ver.all %}#}
+    {#                        {% if version.active_version %}#}
+    {#                            <p class="text-dark">#}
+    {#                                Версия № {{ version.number_version }},#}
+    {#                                Название версии: {{ version.name_version }}#}
+    {#                            </p>#}
+    {#                        {% endif %}#}
+    {#                    {% endfor %}#}
+    {#                {% else %}#}
+    {#                    <p class="text-dark">Версия: отсутствует</p>#}
+    {#                {% endif %}#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+{% endblock %}
+
