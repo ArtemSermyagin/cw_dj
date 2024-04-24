@@ -43,7 +43,6 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                            <li><a class="dropdown-item" href="{% url 'blog:count' %}">Статистика рассылок</a>
                             </li>
                         </ul>
                     <li class="nav-item">
@@ -75,9 +74,7 @@
                     </li>
                     </ul>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'blog:list' %}">Блог</a>
-                    </li>
+
 
                 </ul>
             </div>
@@ -108,16 +105,13 @@
             <h5>Категории</h5>
             <ul class="list-unstyled text-small">
                 <li><a class="text-muted" href="{% url 'clients:newsletter_view' %}">Рассылки</a></li>
-                <li><a class="text-muted" href="{% url 'blog:count' %}">Статистика рассылок</a></li>
                 <li><a class="text-muted" href="{% url 'clients:home' %}">Клиенты</a></li>
                 <li><a class="text-muted" href="{% url 'clients:log_view' %}">Отчёты</a></li>
             </ul>
         </div>
         <div class="col-6 col-md">
             <h5>Дополнительно</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="{% url 'blog:list' %}">Мы пишем</a></li>
-            </ul>
+
         </div>
         <div class="col-6 col-md">
             <h5>О нас</h5>

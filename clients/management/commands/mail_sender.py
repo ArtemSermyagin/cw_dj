@@ -3,7 +3,7 @@ from datetime import datetime
 from django.core.mail import send_mail
 
 from clients.models import Newsletter, Log
-from CW_6_Django import settings
+from cw_dj import settings
 
 from django.core.management import BaseCommand
 
