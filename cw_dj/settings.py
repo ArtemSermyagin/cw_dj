@@ -2,22 +2,18 @@ from pathlib import Path
 
 import os
 from dotenv import load_dotenv
+import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+env = environ.Env()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+env.read_env(os.path.join(BASE_DIR, ".env"))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+SECRET_KEY = env("SECRET_KEY", cast=str)
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6m^$xymj0a!$vxb5f2t!k-t=s23+6h-c3*@#3+==-j3fehb1#e'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,6 +25,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
 
     'clients',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -60,10 +57,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'сw_dj.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+WSGI_APPLICATION = 'cw_dj.wsgi.application'
 
 # DATABASES = {
 #     'default': {
@@ -80,10 +74,6 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -99,9 +89,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Moscow'
@@ -110,13 +97,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -139,24 +120,19 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_IMPORTS = ["clients.tasks"]
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'MAndreych@yandex.ru'
-EMAIL_HOST_PASSWORD = 'cakqtvelkwayqzen'
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# SERVER_EMAIL = EMAIL_HOST_USER
-# EMAIL_ADMIN = EMAIL_HOST_USER
-
+EMAIL_PORT = env("EMAIL_PORT", cast=int)
+EMAIL_USE_SSL = env("EMAIL_PORT", cast=bool)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", cast=str)
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", cast=str)
 LOGIN_URL = '/users/'
 
-CACHE_ENABLED = True
+CACHE_ENABLED = env("CACHE_ENABLED", cast=bool)
 if CACHE_ENABLED:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": 'redis://127.0.0.1:6379'  # os.getenv("CACHE_LOCASHION"),
+            "LOCATION": 'redis://127.0.0.1:6379'
         }
     }
 

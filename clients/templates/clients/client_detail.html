@@ -20,26 +20,5 @@
             </div>
         </div>
     </div>
-    {#    <div class="col-5 ">#}
-    {#        <div class="card mb-2 box-shadow">#}
-    {#            <div class="card-header">#}
-    {#                <h4 class="my-0 font-weight-normal">Версии товара</h4>#}
-    {#            </div>#}
-    {#            <div class="card-body">#}
-    {#                {% if object.product_ver.exists %}#}
-    {#                    {% for version in object.product_ver.all %}#}
-    {#                        {% if version.active_version %}#}
-    {#                            <p class="text-dark">#}
-    {#                                Версия № {{ version.number_version }},#}
-    {#                                Название версии: {{ version.name_version }}#}
-    {#                            </p>#}
-    {#                        {% endif %}#}
-    {#                    {% endfor %}#}
-    {#                {% else %}#}
-    {#                    <p class="text-dark">Версия: отсутствует</p>#}
-    {#                {% endif %}#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
 {% endblock %}
 

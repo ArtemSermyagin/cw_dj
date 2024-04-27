@@ -1,9 +1,7 @@
 from django.shortcuts import render
-# from django.db.models import Сount
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.utils.crypto import get_random_string
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views import View
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from pytils.translit import slugify
 
 from blog.forms import BlogPostForm
@@ -32,7 +30,6 @@ class BlogPostCreateView(CreateView):
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
     form_class = BlogPostForm
-    # fields = ('title', 'body', 'preview', 'sign_publication',)
     success_url = reverse_lazy('blog:list')
     extra_context = {
         'title': 'Редактирование блога'
@@ -69,16 +66,19 @@ class BlogPostDetailView(DetailView):
         return context_data
 
 
-def num_letter_client(request):
-    num_client = Client.objects.count()
-    num_letters = Newsletter.objects.count()
-    num_letter_create = Newsletter.objects.filter(status='created').count()
-    num_letter_started = Newsletter.objects.filter(status='started').count()
-    return render(request, 'blog/count_list.html',
-                  {'num_client': num_client, 'num_letters': num_letters,
-                   'num_letter_create': num_letter_create, 'num_letter_started': num_letter_started})
+class NumLetterClient(View):
+
+    def get(self, request, *args, **kwargs):
+        num_client = Client.objects.count()
+        num_letters = Newsletter.objects.count()
+        num_letter_create = Newsletter.objects.filter(status='created').count()
+        num_letter_started = Newsletter.objects.filter(status='started').count()
+        return render(request, 'blog/count_list.html',
+                      {'num_client': num_client, 'num_letters': num_letters,
+                       'num_letter_create': num_letter_create, 'num_letter_started': num_letter_started})
 
 
-def get_random_posts(request):
-    random_posts = BlogPost.objects.order_by('?')[:3]
-    return render(request, 'blog/blogpost_list.html', {'random_posts': random_posts})
+class GetRandomPost(View):
+    def get(self, request, *args, **kwargs):
+        random_posts = BlogPost.objects.order_by('?')[:3]
+        return render(request, 'blog/blogpost_list.html', {'random_posts': random_posts})

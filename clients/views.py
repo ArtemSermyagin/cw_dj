@@ -52,14 +52,14 @@ class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     }
 
     def get_object(self, queryset=None):
-        '''
+        """
         Проверяет права доступа, если пользователь пытается редактировать не свой товар
         выкидывает ошибку Http404
-        '''
-        self.object = super().get_object(queryset)
-        if self.object.user != self.request.user:
-            raise Http404
-        return self.object
+        """
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise Http404("Вы не являетесь создателем этого клиента")
+        return obj
 
 
 class ClientBlockView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -71,7 +71,7 @@ class ClientBlockView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         if self.object.user != self.request.user:
-            raise Http404
+            raise Http404("Вы не являетесь создателем этого клиента")
         return self.object
 
 
@@ -81,7 +81,7 @@ class Client_cardDetailView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         if self.object.user != self.request.user:
-            raise Http404
+            raise Http404("Вы не являетесь создателем этого клиента")
         return self.object
 
     def get_context_data(self, **kwargs):
@@ -106,7 +106,7 @@ class ClientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         '''
         self.object = super().get_object(queryset)
         if self.object.user != self.request.user:
-            raise Http404
+            raise Http404("Вы не являетесь создателем этого клиента")
         return self.object
 
 
@@ -123,7 +123,7 @@ class Newsletter_cardDetailView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         if self.object.user != self.request.user:
-            raise Http404
+            raise Http404("Вы не являетесь создателем этой рассылки")
         return self.object
 
     def get_context_data(self, **kwargs):
@@ -147,28 +147,13 @@ class Newsletter_cardDetailView(LoginRequiredMixin, DetailView):
 class TaskToggleView(LoginRequiredMixin, UpdateView):
     model = PeriodicTask
     success_url = reverse_lazy('clients:newsletter_view')
-    fields = []  # Полей для редактирования нет, так как мы меняем только поле enabled
+    fields = []
 
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.enabled = not instance.enabled
         instance.save()
         return super().form_valid(form)
-
-
-# class TaskToggleView(LoginRequiredMixin, View):
-#
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             task = PeriodicTask.objects.get(name=kwargs['pk'])
-#         except PeriodicTask.DoesNotExist:
-#             return reverse_lazy('clients:newsletter_view')
-#         if task.enabled:
-#             task.enabled = False
-#         else:
-#             task.enabled = True
-#         task.save()
-#         return reverse_lazy('clients:newsletter_view')
 
 
 class NewsletterCreateView(LoginRequiredMixin, CreateView):
@@ -250,7 +235,7 @@ class NewsletterDeleteView(LoginRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         if self.object.user != self.request.user:
-            raise Http404
+            raise Http404("Вы не являетесь создателем этой рассылки")
         return self.object
 
 
@@ -277,9 +262,9 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('clients:confirm')
 
     def form_valid(self, form):
-        code = get_random_string(6, '1234567890')  # Генерируем 6ти значный код для подтверждения
-        user = form.save(commit=False)  # Создание объекта пользователя без сохранения в базу данных
-        user.is_active = False  # Установка статуса активации на False
+        code = get_random_string(6, '1234567890')
+        user = form.save(commit=False)
+        user.is_active = False
         user.save()
         content_type = ContentType.objects.get_for_model(User)
         permission = Permission.objects.get(
@@ -290,10 +275,8 @@ class RegisterView(CreateView):
         Code.objects.create(
             code=code,
             user=user
-        )  # Создаём запись кода для пользователя в БД
+        )
         self.request.session['user_id'] = user.id
-        # Сохраняем id пользователя в сессии, чтобы в подтверждении можно было найти этого пользователя
-        # и при правильном вводе кода авторизовать
         send_mail(
             subject='Верификация почты',
             message=f'Для верификации почты введите данный код {code}',
@@ -311,30 +294,24 @@ class ConfirmView(View):
     def post(self, request, *args, **kwargs):
         user_id = request.session.get('user_id')
         # Получаем id пользователя
-        user = User.objects.get(pk=user_id)  # Получаем пользователя по id
-        code_user = request.POST.get('code_user')  # Получаем код(который ввел пользователь) с формы
-        if not code_user:  # Если код не введен, перенаправляем снова на ввод
+        user = User.objects.get(pk=user_id)
+        code_user = request.POST.get('code_user')
+        if not code_user:
             return redirect('clients:confirm')
         try:
             Code.objects.get(code=code_user, user=user)
-            # Пытаемся найти код пользователя в таблице с кодами, и если код найден, то идем дальше
         except Code.DoesNotExist:
-            # Если код не совпал, то перенаправляем на повторное подтверждение, но уже с ошибкой
             return render(request, 'clients/confirm_account.html', context={
                 'error': 'Не верно введенный код'
             })
         user.is_active = True
-        # Если код совпал, то пользователь имеет статус активного
         user.save()
         Code.objects.get(
             code=code_user,
             user=user
         ).delete()
-        # Удаляем код из БД, тк пользователь его ввёл
         login(request, user)
-        # Авторизовываем пользователя в сессии
         del request.session['user_id']
-        # Удаляем id пользователя из сессии
         return redirect('clients:login')
 
 
@@ -349,17 +326,12 @@ class ProfileView(UpdateView):
 
 def user_gen_password(request):
     user_email = request.POST.get("user_email")
-    # Получаем почту (с формы), на которую отправлять новый пароль
     if not user_email:
         return redirect(reverse('clients:login'))
-        # Если почта не указана, то опять на логин
     try:
-        # Пытаемся найти пользователя в БД по почте
         user = User.objects.get(email=user_email)
     except User.DoesNotExist:
-        # Если не нашли, то опять на логин
         return redirect(reverse('clients:login'))
-    # chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
     new_password = get_random_string(6, '1234567890')
     send_mail(
         subject='Сгенерированн новый пароль',
@@ -367,11 +339,6 @@ def user_gen_password(request):
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[user_email]
     )
-    # Отправляем на почту новый пароль
     user.set_password(new_password)
-    # Для пользователя, которого нашли по введенной почте меняем пароль
     user.save()
     return redirect(reverse('clients:login'))
-from django.shortcuts import render
-
-# Create your views here.
