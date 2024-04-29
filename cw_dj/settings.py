@@ -59,18 +59,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cw_dj.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'cw_django',
-#         'USER': 'andrey',
-#         'PASSWORD': '12345'
-#     }
-# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'cw_django.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env("NAME", cast=str),
+        'USER': env("USER", cast=str),
+        'PASSWORD': env("PASSWORD", cast=str),
+        'HOST': env("HOST", cast=str),
+        'PORT': env("PORT", cast=int),
     }
 }
 
